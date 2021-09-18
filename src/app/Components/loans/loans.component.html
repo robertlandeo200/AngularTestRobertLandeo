@@ -1,0 +1,120 @@
+<div>
+    <div class="row">
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center">Request Loans</h2>
+                    <form>
+                      <div class="row">
+                      <div class="col-lg-10">
+                      <div class="input-group">
+                          <span class="input-group-text">Search loans clients</span>
+                            <ng-autocomplete type="text" class="form-control"
+                              [data]="dataClient"
+                              [searchKeyword]="keyword"
+                              (selected)='selectClient($event)'
+                              (inputCleared)='getLoans()'
+                              [itemTemplate]="itemTemplate"
+                              [notFoundTemplate]="notFoundTemplate">                                 
+                            </ng-autocomplete>
+                            
+                            <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.t_ClientName"></a>
+                            </ng-template>
+                            
+                            <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        </div>
+                      </div>
+                         <div class="col-lg-2">
+                          <div class="input-group">
+                              <button type="button" (click)="AddNewLoan()" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#mdAddLoans"><i class="fas fa-plus"></i> Request Loan</button>
+                            </div>
+                          </div>
+                      </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+      <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+              <th scope="col">Client Name</th>
+              <th scope="col">Request Date</th>
+              <th scope="col">Requested Amount</th>
+              <th scope="col">Options</th>
+            </tr>
+          </thead>
+        <tbody>
+            <tr *ngFor="let loan of listLoans;">
+                <td>{{loan.t_ClientName}}</td>
+                <td>{{loan.d_Date_Request}}</td>
+                <td>{{loan.n_Request_Amount}}</td>
+                <td>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#mdAddLoans" (click)="getSelectedLoan(loan)"><i class="far fa-edit text-success"></i></a>&nbsp;
+                    <a style="cursor: pointer;" (click)="deleteLoan(loan.iD_Request_Loans)"><i class="far fa-trash-alt text-danger"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="modal fade" id="mdAddLoans" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">{{ task }} Loan</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formLoan">
+              <div class="row">
+                <div class="col-lg-5">
+                    <label for="txtClientName" class="form-label">Client Name</label>
+                    <div class="input-group">
+                    <ng-autocomplete class="form-control" type="text" formControlName="txtClientName"
+                              [data]="dataClient"
+                              [searchKeyword]="keyword"
+                              (selected)='selectClientLoan($event)'
+                              (inputCleared)='clearClient()'
+                              [itemTemplate]="itemTemplate"
+                              [notFoundTemplate]="notFoundTemplate">                                 
+                            </ng-autocomplete>
+                            
+                            <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.t_ClientName"></a>
+                            </ng-template>
+                            
+                            <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        </div>
+                </div>
+                <div class="col-lg-3">
+                    <label for="txtAmount" class="form-label">Amount</label>
+                    <input type="text" (keypress)="validateNumber($event)" formControlName="txtAmount" class="form-control" id="txtAmount">
+                </div>
+                   <div class="col-lg-4">
+                    <label for="txtDateRequest" class="form-label">Date of Request</label>
+                    <div class="input-group">
+                      <input class="form-control" placeholder="yyyy-mm-dd"
+                             name="dp" formControlName="txtDateRequest" readonly ngbDatepicker #d="ngbDatepicker"
+                             [minDate]="{year: 1990, month: 1, day: 1}"
+                             [maxDate]="{year: 2050, month: 12, day: 31}">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="far fa-calendar"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" (click)="addLoan()" data-bs-dismiss="modal"><i class="fas fa-save"></i> Save</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
